@@ -24,12 +24,14 @@
       var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
       $('#base').text(baseUrl);
 
-      socket.emit('connect', "Started");
-      socket.on('webhook', function (data) {
+      function show(data) {
         var content = document.createTextNode(JSON.stringify(data,null,2)+'\n');
         var console = document.getElementById("console");
         console.insertBefore(content,console.firstChild);
-      });
+      }
+      socket.emit('connect', "Started");
+      socket.on('webhook', show );
+      socket.on('response', show );
     });
 
   </script>

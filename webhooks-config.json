@@ -1,6 +1,10 @@
 {
   "actions": {
     "/helloworld": "echo hello world",
-    "/nosuchcommand": "thisCommandDoesNotExist"
+    "/nosuchcommand": "thisCommandDoesNotExist",
+    "/showresponse": {
+      "command": "echo this is a response.",
+      "respond": true
+    }
   }
 }

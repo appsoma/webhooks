@@ -3,9 +3,12 @@
 Execute arbitrary operating system commands (called "actions") in a sandbox when webhook calls are received.
 
 ## Usage
-`./start [port|7788]` begins the webhooks server.
+Start the server:
+```
+supervisor -n error webhooks.js 7788
+```
 
-The server restarts automatically if you change the `webhooks-config.json` file.
+The server automatically adjusts itself if you change the `webhooks-config.json` file - no restart needed.
 
 ## Try It!
 Visit the URL of your webhook server to see a web page that lets you experiment.
@@ -14,10 +17,11 @@ To make an action that responds to a webhook:
 
 1. Edit `webhooks-config.json`
 2. In the `actions` section add this line:
-```
-"/mycommand": "echo this is my command!"
-```
-_You do NOT need to restart the server - it watches the config file automatically._
+  ```
+  "/mycommand": "echo this is my command!"
+  ```
+  *<sub>You do NOT need to restart the server - it watches the config file automatically.</sub>*
+
 3. Visit `http://yourserver:7788/mycommand`.
 4. Watch the console. It worked!
 
@@ -52,11 +56,11 @@ Setting `respond: true` makes the HTTP response wait until the command's process
   "stderr": "any errors show here",
   "exitCode": 0
 }
+```
 
 ### Environment Variables
 
-```
-The following environment variables will be injected into any command
+The following environment variables will be available to any command
 you run:
 ```
 webhook_path      the path of the webhook

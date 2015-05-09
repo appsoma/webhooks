@@ -10,11 +10,17 @@ The server restarts automatically if you change the `webhooks-config.json` file.
 ## Try It!
 Visit the URL of your webhook server to see a web page that lets you experiment.
 
-To make your own, edit `webhooks-config.json` and in the `actions` section add this line:
+To make an action that responds to a webhook:
+
+1. Edit `webhooks-config.json`
+2. In the `actions` section add this line:
 ```
 "/mycommand": "echo this is my command!"
 ```
-You do NOT need to restart the server - it watches the config file automatically.  Now visit `http://yourserver:7788/mycommand` and watch the console. It worked!
+_You do NOT need to restart the server - it watches the config file automatically._
+3. Visit `http://yourserver:7788/mycommand`.
+4. Watch the console. It worked!
+
 
 ## Configuration
 

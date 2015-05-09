@@ -20,27 +20,30 @@
 
     $(document).ready( function() {
 
+      var getUrl = window.location;
+      var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+      $('#base').text(baseUrl);
+
       socket.emit('connect', "Started");
       socket.on('webhook', function (data) {
-        var content = document.createTextNode(JSON.stringify(data,null,2));
-        var div = document.createElement("DIV");
-        div.appendChild(content);
+        var content = document.createTextNode(JSON.stringify(data,null,2)+'\n');
         var console = document.getElementById("console");
-        console.insertBefore(div,console.firstChild);
+        console.insertBefore(content,console.firstChild);
       });
     });
 
   </script>
 </head>
-<body>
+<body style="margin:20px;">
   <h1>Appsoma Webhooks</h1>
-  <h2>Webhook Stream</h2>
+  Test out your webhooks here. Remember, the server auto-restarts each time you
+  edit the webhooks-config.json file.
   <form id='test' onsubmit="return test()">
-      Hook; <input id="path" autocomplete="off" />
-      <input type='submit' value='Send'>
+      <pre><span id='base'></span><input id="path" autocomplete="off" /><input type='submit' value='Send'>
+        <small><i>Leave off the domain and port - they are automatically prepended</i></small></pre>
   </form>
   <h2>Webhook Stream</h2>
-  <pre id='console'>
+  <pre id='console' class='small'>
   </pre>
 </body>
 </html>

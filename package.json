@@ -1,0 +1,23 @@
+{
+  "name": "webhooks",
+  "version": "0.1.0",
+  "description": "Webhooks for Appsoma",
+  "main": "webhooks.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/appsoma/webhooks.git"
+  },
+  "keywords": [
+    "appsoma",
+    "webhooks"
+  ],
+  "author": "Ken Demarest <ken@appsoma.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/appsoma/webhooks/issues"
+  },
+  "homepage": "https://github.com/appsoma/webhooks"
+}

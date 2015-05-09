@@ -1,0 +1,6 @@
+{
+  "actions": {
+    "/helloworld": "echo hello world",
+    "/nosuchcommand": "thisCommandDoesNotExist"
+  }
+}

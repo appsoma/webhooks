@@ -1,5 +1,46 @@
-<h1>Appsoma Webhooks</h1>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Appsoma Webhooks</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="socket.io/socket.io.js"></script>
 
-This will allow you to test installed webhooks at some point.
+  <script>
 
- 
+    var socket = io();
+
+    function test() {
+      var url = $('#path').val();
+      $.get( url );
+      return false;
+    }
+
+    $(document).ready( function() {
+
+      socket.emit('connect', "Started");
+      socket.on('webhook', function (data) {
+        var content = document.createTextNode(JSON.stringify(data,null,2));
+        var div = document.createElement("DIV");
+        div.appendChild(content);
+        var console = document.getElementById("console");
+        console.insertBefore(div,console.firstChild);
+      });
+    });
+
+  </script>
+</head>
+<body>
+  <h1>Appsoma Webhooks</h1>
+  <h2>Webhook Stream</h2>
+  <form id='test' onsubmit="return test()">
+      Hook; <input id="path" autocomplete="off" />
+      <input type='submit' value='Send'>
+  </form>
+  <h2>Webhook Stream</h2>
+  <pre id='console'>
+  </pre>
+</body>
+</html>

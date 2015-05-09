@@ -3,7 +3,7 @@
     "/helloworld": "echo hello world",
     "/nosuchcommand": "thisCommandDoesNotExist",
     "/showresponse": {
-      "command": "echo this is a response.",
+      "command": "echo my uid is $webhook_uid", 
       "respond": true
     }
   }

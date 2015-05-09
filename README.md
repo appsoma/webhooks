@@ -22,9 +22,11 @@ _You do NOT need to restart the server - it watches the config file automaticall
 4. Watch the console. It worked!
 
 
-## Configuration
+## Attaching Actions
 
 The file `webhooks-config.json` lets you set up commands to run when webhooks are received.
+
+### webhooks-config.json
 
 ```
 {
@@ -32,11 +34,35 @@ The file `webhooks-config.json` lets you set up commands to run when webhooks ar
     "/helloworld": "echo hello world",
     "/badcommand": "commandDoesNotExist",
     "/getResult": {
-      command: "echo This is a returned result!",
-      stdout: true,
-      stderr: true
+      command: "echo This is a returned result. My uid is $webhook_uid",
+      respond: true
     }
 }
+```
+
+### Responses
+
+By default, webhooks.js responds with code 200 and "OK" in the response body.
+
+Setting `respond: true` makes the HTTP response wait until the command's process is complete, and then causes it to pass back:
+```
+{
+  "uid": 132,
+  "stdout": "this is my stdout\n",
+  "stderr": "any errors show here",
+  "exitCode": 0
+}
+
+### Environment Variables
+
+```
+The following environment variables will be injected into any command
+you run:
+```
+webhook_path      the path of the webhook
+webhook_command   the command being run
+webhook_uid       the unique id of this webhook call
+webhook_{key}     each key in the webhook's URL will get an env var
 ```
 
 ## Installation

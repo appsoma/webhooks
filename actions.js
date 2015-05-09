@@ -1,9 +1,10 @@
 var Actions = function(app,onResponse) {
   var routeList = {};
 
-  function runCommand( command, onStdout, onStderr, onComplete ) {
+  function runCommand( command, environment, onStdout, onStderr, onComplete ) {
     var exec = require('child_process').exec;
-    var child = exec( command );
+
+    var child = exec( command, {env: environment} );
     child.stdout.on('data', function(data) {
       console.log('stdout: ' + data);
       if( onStdout ) {
@@ -47,10 +48,19 @@ var Actions = function(app,onResponse) {
           return;
         }
 
+        var environment = {};
+        environment['webhook_path'] = action.path;
+        environment['webhook_command'] = action.command;
+        environment['webhook_uid'] = req.webhook_uid;
+        for( var k in req.query ) {
+          environment['webhook_'+k] = req.query[k];
+        }
+
         console.log("Handling "+action.path);
         try {
           console.log("command="+action.command);
           var result = {
+            uid: -1,
             stdout: '',
             stderr: '',
             exitCode: -1
@@ -58,6 +68,7 @@ var Actions = function(app,onResponse) {
 
           runCommand(
             action.command,
+            environment,
             !action.respond ? null : function(data) {
               result.stdout += data;
             },
@@ -65,7 +76,7 @@ var Actions = function(app,onResponse) {
               result.stderr += data;
             },
             !action.respond ? null : function(exitCode) {
-              result.uid = req.uid;
+              result.uid = req.webhook_uid;
               result.exitCode = exitCode;
               res.send(result);
               if( onResponse ) {

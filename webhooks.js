@@ -31,10 +31,11 @@ var WebhooksServer = function (port) {
   // Middleware to emit the REST calls out
   // to all listeners on the websocket...
   //
-  var response_uid = 0;
+  var webhook_uid = 0;
+  
   app.use(function(req, res, next) {
-    response_uid += 1;
-    req.uid = response_uid;
+    webhook_uid += 1;
+    req.webhook_uid = webhook_uid;
     try {
       console.log('%s %s', req.url, JSON.stringify(req.query,null,2));
     }
@@ -42,7 +43,7 @@ var WebhooksServer = function (port) {
       console.log(e.message);
     }
     try {
-      io.emit('webhook', { uid: response_uid, action: req.url, params: req.query });
+      io.emit('webhook', { uid: webhook_uid, action: req.url, params: req.query });
     }
     catch(e) {
       console.log(e.message);

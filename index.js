@@ -1,9 +1,5 @@
 module.exports = function (port) {
 
-  // For reference, here are other nodejs file manipulation tools:
-  // Wrench - for recursive file manipulation  https://www.npmjs.com/package/wrench
-  // ncp - recursive async file copy  https://www.npmjs.com/package/ncp
-
   var express = require('express');
   var app = express();
   var http = require('http').Server(app);
@@ -12,9 +8,10 @@ module.exports = function (port) {
   var path = require('path');
   var bodyParser = require('body-parser')
 
+  app.port = port;
   app.locals.title = 'Appsoma Webhooks';
   app.locals.email = 'ken@appsoma.com';
-  app.use( bodyParser.json({limit: '50mb'}) );
+  app.use( bodyParser.json({limit: '1mb'}) );
 
   // Try to make exceptions more visible...
   if (app.get('env') === 'development') {
@@ -27,6 +24,38 @@ module.exports = function (port) {
        });
    }
 
+   function History(requestsToKeep) {
+     var fifo = [];
+     var data = {};
+
+     function add(uid,req,res) {
+       fifo.push(uid);
+       data[uid] = {
+         req: req,
+         res: null
+       }
+       if( fifo.length > requestsToKeep ) {
+         var killUid = fifo.shift();
+         delete data[killUid];
+       }
+     }
+
+     function get(uid,field) {
+       console.log('fetching '+uid);
+       if( !data[uid] ) {
+         return '';
+       }
+       return data[uid].req[field];
+     }
+
+     return {
+       add: add,
+       get: get
+     }
+   };
+
+   var history = History(1000);
+
   //
   // Middleware to emit the REST calls out
   // to all listeners on the websocket...
@@ -36,6 +65,8 @@ module.exports = function (port) {
   app.use(function(req, res, next) {
     webhook_uid += 1;
     req.webhook_uid = webhook_uid;
+    history.add( webhook_uid, req, null );
+
     try {
       console.log('%s %s', req.url, JSON.stringify(req.query,null,2));
     }
@@ -49,6 +80,22 @@ module.exports = function (port) {
       console.log(e.message);
     }
     next();
+  });
+
+  app.get( '/request/:uid/header', function( req, res ) {
+    console.log('query='+JSON.stringify(req.query));
+    var uid = req.params.uid;
+    res.send( history.get(uid,'headers') );
+  });
+
+  app.get( '/request/:uid/query', function( req, res ) {
+    var uid = req.params.uid;
+    res.send( history.get(uid,'query') );
+  });
+
+  app.get( '/request/:uid/body', function( req, res ) {
+    var uid = req.params.uid;
+    res.send( history.get(uid,'body') );
   });
 
   app.get('/', function( req, res ){
@@ -72,12 +119,6 @@ module.exports = function (port) {
       s += "<div>"+(r.route.methods.get ? "GET" : "POST") + " " + r.route.path + "</div>"
     }
     res.send(s);
-  });
-
-  app.get( '/parrot/push', function( req, res ) {
-    console.log("in parrot push");
-//    var gmail = require("gmailer");
-    res.send('ack');
   });
 
   var userCount = 0;

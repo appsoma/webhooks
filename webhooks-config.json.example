@@ -1,9 +1,21 @@
 {
   "actions": {
-    "/helloworld": "echo hello world",
-    "/nosuchcommand": "thisCommandDoesNotExist",
-    "/showresponse": {
-      "command": "echo my uid is $webhook_uid", 
+    "get /helloworld": "echo hello world",
+    "get /nosuchcommand": "thisCommandDoesNotExist",
+    "get /ask_uid": {
+      "command": "echo My uid is $webhook_uid",
+      "respond": true
+    },
+    "get /ask_url": {
+      "command": "echo $webhook_url/$webhook_uid",
+      "respond": true
+    },
+    "get /show_headers": {
+      "command": "echo $webhook_headers",
+      "respond": true
+    },
+    "post /show_body": {
+      "command": "echo $webhook_body",
       "respond": true
     }
   }

@@ -63,10 +63,14 @@ Setting `respond: true` makes the HTTP response wait until the command's process
 The following environment variables will be available to any command
 you run:
 ```
+webhook_url       the localhost:port webhooks is using
+webhook_uid       the unique id of this webhook call
 webhook_path      the path of the webhook
 webhook_command   the command being run
-webhook_uid       the unique id of this webhook call
-webhook_{key}     each key in the webhook's URL will get an env var
+webhook_headers   the headers of the incoming webhook
+webhook_query     the query section of a 'get' webhook
+webhook_body      the body section of a 'post' webhook
+webhook_{key}     each key in a 'get' webhook will be assigned
 ```
 
 ## Installation

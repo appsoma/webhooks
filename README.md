@@ -5,7 +5,7 @@ Execute arbitrary operating system commands (called "actions") in a sandbox when
 ## Usage
 Start the server:
 ```
-supervisor -n error webhooks.js 7788
+supervisor -n error webhooks.js
 ```
 
 The server automatically adjusts itself if you change the `webhooks-config.json` file - no restart needed.

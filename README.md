@@ -1,6 +1,6 @@
 # Webhooks
 
-Execute arbitrary operating system commands (called "actions") in a sandbox when webhook calls are received.
+Webhook handler microservice. Execute arbitrary operating system commands (called "actions") in a sandbox when webhook calls are received.
 
 ## Usage
 Start the server:
